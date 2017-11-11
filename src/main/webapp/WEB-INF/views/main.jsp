@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Dispenser Controls</title>
+<<<<<<< HEAD
 <link href="resources/css/custom.css" rel="stylesheet">
 <link href="resources/css/bootstrap.css" rel="stylesheet">
 <script type="resources/js/bootstrap.js"></script>
@@ -19,6 +20,19 @@
 		<form:input class="form-control" path="name" />
 
 		<input class="btn btn-submit" type="submit">
+=======
+<link href="<c:url value='/resources/css/custom.css' />"
+	rel="stylesheet">
+</head>
+<body>
+	Controls for the dispenser go here
+
+	<form:form method="POST" action="/m7/edit" modelAttribute="patientForm">
+		<label>Enter patient's name here:</label>
+		<form:input path="name"/>
+			
+		<input type="submit">
+>>>>>>> 18d9407d977938f07c9b2befeddaaa2e0e2f79c6
 
 	</form:form>
 </body>
