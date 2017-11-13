@@ -20,7 +20,6 @@ public class MainController {
         ModelAndView mav = new ModelAndView("/main");
         mav.addObject("patientList", getAllPatients());
         mav.addObject("patientForm", new PatientForm());
-        System.out.println("owen");
         return mav;
     }
 
