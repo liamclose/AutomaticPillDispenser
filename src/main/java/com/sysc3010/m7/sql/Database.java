@@ -14,8 +14,19 @@ public class Database{
 	public static final String DATABASE = "jdbc:mysql://localhost:3306/dispenser";
 	public static final String USER = "root";
 	public static final String PASS = "tester";
+	protected Connection con;
 	
-	public static void insertPatient(Connection con, String name, int room) {
+	public Database() throws ClassNotFoundException {
+		Class.forName("com.mysql.jdbc.Driver");  
+		try {
+			con=DriverManager.getConnection(DATABASE, USER, PASS);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertPatient(String name, int room) {
 		try {
 			Statement stmt = con.createStatement();
 			int i = stmt.executeUpdate("INSERT into patient (patient_name, room_number) VALUES ( '" + name + "' , " + room + ");");
@@ -25,7 +36,7 @@ public class Database{
 		}
 	}
 	
-	public static void insertMedication(Connection con, int patient_id, String medication, int dosage) {
+	public void insertMedication(int patient_id, String medication, int dosage) {
 		try {
 			Statement stmt = con.createStatement();
 			int i = stmt.executeUpdate("INSERT into medication (medication, dosage, patient_id) VALUES ( '" + medication + "' , " + dosage + ", " + patient_id + ");");
@@ -41,7 +52,7 @@ public class Database{
 		
 	}
 	
-	public static void medicationApplied(Connection con, java.util.Date date, Medication m) {
+	public void medicationApplied(java.util.Date date, Medication m) {
 		try {
 			Statement stmt = con.createStatement();
 			String s = toSQLDateTime(date);
@@ -53,7 +64,7 @@ public class Database{
 		}
 	}
 	
-	public static Patient queryPatientByName(Connection con, String name) {
+	public Patient queryPatientByName(String name) {
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM patient where patient_name like '%" + name + "%';");
@@ -68,7 +79,7 @@ public class Database{
 		}
 	}
 	
-	public static ArrayList<Medication> queryMedicationByPatient(Connection con, Patient p) {
+	public ArrayList<Medication> queryMedicationByPatient(Patient p) {
 		try {
 			ArrayList<Medication> meds = new ArrayList<Medication>();
 			Statement stmt = con.createStatement();
@@ -85,7 +96,7 @@ public class Database{
 		}
 	}
 	
-	public static void dispense(Connection con) {
+	public void dispense() {
 		try {
 			
 			//this is temporary code, actual code will involve scheduling and communication
