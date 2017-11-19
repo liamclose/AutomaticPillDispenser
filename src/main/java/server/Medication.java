@@ -1,4 +1,4 @@
-package com.sysc3010.m7.sql;
+package server;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +16,18 @@ public class Medication {
 		this.patient_id = r.getInt("patient_id");
 	}
 	
-	public Medication() {
-		
-	}
 	
 	public String toString() {
 		return " " + this.id + "    " + this.patient_id + "    " + this.name + "    " + this.dosage;
+	}
+	
+	public int getID() {
+		return this.id;
+	}
+	public int getPatientID() {
+		return this.patient_id;
+	}
+	public int getDosage() {
+		return this.id;
 	}
 }

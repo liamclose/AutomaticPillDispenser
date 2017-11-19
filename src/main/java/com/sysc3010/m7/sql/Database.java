@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import server.Medication;
+import server.Patient;
 public class Database{
 	
 	public static final String DATABASE = "jdbc:mysql://localhost:3306/dispenser";
@@ -43,7 +46,7 @@ public class Database{
 			Statement stmt = con.createStatement();
 			String s = toSQLDateTime(date);
 			System.out.println(s);
-			int i = stmt.executeUpdate("INSERT into dosages (medication_id, date, patient_id) VALUES ( '" + m.id + "' , '" + s + "', " + m.patient_id + ");");
+			int i = stmt.executeUpdate("INSERT into dosages (medication_id, date, patient_id) VALUES ( '" + m.getID() + "' , '" + s + "', " + m.getPatientID() + ");");
 			System.out.println(i);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -69,7 +72,7 @@ public class Database{
 		try {
 			ArrayList<Medication> meds = new ArrayList<Medication>();
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where patient_id = " + p.id + ";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where patient_id = " + p.getID() + ";");
 			while(rs.next())  {
 				Medication m = new Medication(rs);
 				meds.add(m);
@@ -97,7 +100,7 @@ public class Database{
 
 		}
 	}
-	public static void main(String args[]) {  
+	/*public static void main(String args[]) {  
 		try {  
 			Class.forName("com.mysql.jdbc.Driver");  
 			Connection con=DriverManager.getConnection(DATABASE, USER, PASS);
@@ -124,5 +127,5 @@ public class Database{
 		catch(Exception e){
 			System.out.println(e);
 		}  
-	}  
+	}  */
 } 

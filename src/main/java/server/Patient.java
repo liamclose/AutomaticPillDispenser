@@ -1,4 +1,4 @@
-package com.sysc3010.m7.sql;
+package server;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,5 +23,8 @@ public class Patient {
 	
 	public String toString() {
 		return " " + this.id + "    " + this.name + "    " + this.room;
+	}
+	public int getID() {
+		return this.id;
 	}
 }
