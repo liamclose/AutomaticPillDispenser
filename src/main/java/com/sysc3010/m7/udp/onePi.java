@@ -19,8 +19,7 @@ public class onePi {
 	}
 		
 	public void sendto() throws UnknownHostException{
-	    byte[] data = new byte[1];
-		data[0]=(byte)count;
+	    byte[] data = "1".getBytes();
 		
 		sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), sendPort);
 		
