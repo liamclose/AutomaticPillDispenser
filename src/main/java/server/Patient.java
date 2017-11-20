@@ -20,11 +20,18 @@ public class Patient {
 		this.name = name;
 		this.room = room;
 	}
+
 	
 	public String toString() {
-		return " " + this.id + "    " + this.name + "    " + this.room;
+		return this.id + "    " + this.name + "    " + this.room;
 	}
 	public int getID() {
 		return this.id;
+	}
+	public String getName() {
+		return this.name;
+	}
+	public int getRoom() {
+		return this.room;
 	}
 }

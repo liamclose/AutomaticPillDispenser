@@ -195,7 +195,7 @@ public class ServerMainTest {
 		Mockito.when(mockConnection.queryPatientByName(Mockito.anyString())).thenReturn(null);
 		DatagramSocket testSender;
 		try {
-			String m = "Get Patient, Test Patient";
+			String m = "Get id, Test Patient";
 			testSender = new DatagramSocket();
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);

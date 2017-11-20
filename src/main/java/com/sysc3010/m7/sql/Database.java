@@ -26,20 +26,20 @@ public class Database{
 		}
 	}
 	
-	public void insertPatient(String name, int room) {
+	public void insertPatient(Patient p) {
 		try {
 			Statement stmt = con.createStatement();
-			int i = stmt.executeUpdate("INSERT into patient (patient_name, room_number) VALUES ( '" + name + "' , " + room + ");");
+			int i = stmt.executeUpdate("INSERT into patient (patient_name, room_number) VALUES ( '" + p.getName() + "' , " + p.getRoom() + ");");
 			System.out.println(i);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 	
-	public void insertMedication(int patient_id, String medication, int dosage) {
+	public void insertMedication(int patient_id, String medication, int dosage, String time) {
 		try {
 			Statement stmt = con.createStatement();
-			int i = stmt.executeUpdate("INSERT into medication (medication, dosage, patient_id) VALUES ( '" + medication + "' , " + dosage + ", " + patient_id + ");");
+			int i = stmt.executeUpdate("INSERT into medication (medication, dosage, patient_id, time) VALUES ( '" + medication + "' , " + dosage + ", " + patient_id + ", '" + time + "');");
 			System.out.println(i);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -161,6 +161,22 @@ public class Database{
 		}
 	}
 	
+	public ArrayList<Medication> queryMedicationByTime(String time) {
+		try {
+			ArrayList<Medication> meds = new ArrayList<Medication>();
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where time like '" + time + "%';");
+			while(rs.next())  {
+				Medication m = new Medication(rs);
+				meds.add(m);
+				System.out.println(rs.getInt("id")+"  "+rs.getString("medication")+"  "+rs.getInt("dosage") + "  "+rs.getInt("patient_id"));
+			}
+			return meds;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	public void dispense() {
 		try {
 			
