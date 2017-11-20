@@ -16,6 +16,12 @@ public class ServerMain extends Thread {
 	DatagramSocket sendSocket, receiveSocket;
 	//String receivedMessage;
 	static String errorMsg = "Something went wrong. Error code:";
+	
+	//Error codes
+	//0 - unhandled, invalid fn etc
+	//1 - Invalid search (or doesn't exist, could be fine)
+	//2 - Invalid insert/alter
+	//3 - Nothing was deleted,  not really an error
 	Database d;
 	
 	public ServerMain() {
@@ -113,69 +119,128 @@ public class ServerMain extends Thread {
 		return false;
 	}
 	
-	public void dispatch(DatagramPacket p){
+	public boolean validateMed(String[] params) {
+		if(params.length==2) {
+			try {
+				Integer.parseInt(params[1].trim());
+				return true;
+			} catch (Exception e) {
+				
+			}
+		}
+		return false;
+	}
+	
+	public void dispatch(DatagramPacket p) throws IOException{
 		String receivedPacket = new String(p.getData(), 0, p.getLength());
 		String[] params = receivedPacket.split(", ");
+		DatagramPacket reply;
 		switch(params[0].toLowerCase()) {
 		case("insert patient"):
 			System.out.println("Add patient");
 			if (params.length==3 && validateInsertPatient(params)) {
 				d.insertPatient(params[1], Integer.parseInt(params[2].trim()));
+				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
-			break;		
+			else {
+				reply = new DatagramPacket((errorMsg + "2").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			}
+			return;		
 		case("set room"):
 			System.out.println("Set room");
 			if (params.length==3 && validateSetRoom(params)) {
 				d.setRoom(params[1], params[2]);
+				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
-			break;
+			else {
+				reply = new DatagramPacket((errorMsg + "2").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			}
+			return;
 		case("get patient"):
 			System.out.println("GetPatient");
 			Patient pat = d.queryPatientByName(params[1]);
 			if (pat==null) {
 				System.out.println("null");
-				try {
-					DatagramPacket reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
-					receiveSocket.send(reply);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
 			else {
-				System.out.println("not null");
+				String s = pat.toString();
+				reply = new DatagramPacket(s.getBytes(), s.length(), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);				
 			}
-			break;
+			return;
 		case("insert medication"):
 			System.out.println("New Medication");
 			if (validateInsertMedication(params)) {
 				d.insertMedication(Integer.parseInt(params[1].trim()), params[2], Integer.parseInt(params[3].trim()));
+				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			} else {
+				reply = new DatagramPacket((errorMsg + "2").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
-			break;
+			return;
 		case("dosage applied"):
 			System.out.println("Add dosage");
-			System.out.println(d.queryMedicationById(params[2].trim()));
 			if (validateApplyDosage(params)) {
 				d.medicationApplied(params[1], d.queryMedicationById(params[2].trim()));
+				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			} else {
+				reply = new DatagramPacket((errorMsg + "2").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
-			break;
+			return;
 		case("remove patient"):
 			System.out.println("Remove Patient");
 			if (validateRemove(params)) {
 				d.deletePatient(params[1], Boolean.parseBoolean(params[2].trim()));
+				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
-			break;
+			else {
+				reply = new DatagramPacket((errorMsg + "3").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			}
+			return;
 		case("remove medication"):
 			System.out.println("Remove Dosage");
 			if (validateRemove(params)) {
 				System.out.println();
 				d.deleteMedication(params[1], Boolean.parseBoolean(params[2].trim()));
+				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			} else {
+				reply = new DatagramPacket((errorMsg + "3").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
 			}
-			break;
+			return;
 		case("get dosage"):
 			System.out.println("Get Dosage Info");
-			break;
+			if (validateMed(params)) {
+				Medication m = d.queryMedicationById(params[1]);
+				if (m==null) {
+					System.out.println("why");
+					reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+
+				} else {
+					System.out.println("not null");
+					reply = new DatagramPacket(m.toString().getBytes(), m.toString().length(), p.getAddress(), p.getPort());
+				}
+				receiveSocket.send(reply);
+			} else {
+				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			}
+			return;
 		}
+		reply = new DatagramPacket((errorMsg + "0").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+		receiveSocket.send(reply);
 	}
 	
 	public void receive() {
@@ -194,7 +259,12 @@ public class ServerMain extends Thread {
 				System.exit(1);
 			}
 			//receivedMessage = new String(data, 0, receivePacket.getLength());
-			dispatch(receivePacket);
+			try {
+				dispatch(receivePacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Received");
 		//	System.out.println(receivedMessage);
 		}

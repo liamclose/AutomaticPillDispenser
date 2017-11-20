@@ -75,9 +75,13 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {"Test Patient", 7};
+			assertEquals("Success", new String(r.getData(), 0, r.getLength()));
 			assertEquals("Same patient name", expected[0], actual[0]);
 			assertEquals("Same room", expected[1], actual[1]);
 		} catch (Exception e) {
@@ -97,7 +101,12 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
+			assertEquals(ServerMain.errorMsg + 2, new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,11 +130,15 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {"2", "7"};
 			assertEquals("Same patient id", expected[0], actual[0]);
 			assertEquals("Same room", expected[1], actual[1]);
+			assertEquals("Success", new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -142,8 +155,12 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
+			assertEquals(ServerMain.errorMsg + 2, new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,9 +179,11 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
-			Object[] expected = {};
+			assertEquals(pat.toString(), new String (r.getData(), 0, r.getLength()));
 			//need return
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -188,7 +207,6 @@ public class ServerMainTest {
 			DatagramPacket r = new DatagramPacket(data, data.length);
 			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {};
 			assertEquals(ServerMain.errorMsg + 1, new String(r.getData(), 0, r.getLength()));
 			//need return
@@ -217,12 +235,16 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {1, "Test Medication", 200};
 			assertEquals("Same patient id", expected[0], actual[0]);
 			assertEquals("Same medication", expected[1], actual[1]);
 			assertEquals("Same dosage", expected[2], actual[2]);
+			assertEquals("Success", new String(r.getData(),0,r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -241,8 +263,13 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			testSender.setSoTimeout(5000);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
+			Object[] expected = {};
+			assertEquals(ServerMain.errorMsg + 2, new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -269,14 +296,17 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {date, med};
 			assertEquals("Same date", expected[0], actual[0]);
 			assertEquals("Same medication", expected[1], actual[1]);
+			assertEquals("Success", new String(r.getData(),0,r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -292,20 +322,66 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			testSender.setSoTimeout(5000);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
+			Object[] expected = {};
+			assertEquals(ServerMain.errorMsg + 2, new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	@Test
 	public void testGetDosageInfoReal() {
-		
+		System.out.println("Testing get on a 'valid' medication.");
+		Medication med = new Medication("Test Med",3,1);
+		Mockito.when(mockConnection.queryMedicationById(Mockito.anyString())).thenReturn(med);
+		DatagramSocket testSender;
+		try {
+			String m = "Get dosage, 1";
+			testSender = new DatagramSocket();
+			byte data[] = m.getBytes();
+			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
+			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
+			testSender.close();
+			assertEquals(med.toString(), new String (r.getData(), 0, r.getLength()));
+			//need return
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
+	@Test
 	public void testGetDosageInfoNotReal() {
-		
+		System.out.println("Testing get on an invalid medication.");
+		Mockito.when(mockConnection.queryMedicationById(Mockito.anyString())).thenReturn(null);
+		DatagramSocket testSender;
+		try {
+			String m = "Get Dosage, 1";
+			testSender = new DatagramSocket();
+			byte data[] = m.getBytes();
+			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
+			testSender.send(p);
+			testSender.setSoTimeout(5000);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
+			testSender.close();
+			Object[] expected = {};
+			assertEquals(ServerMain.errorMsg + 1, new String(r.getData(), 0, r.getLength()));
+			//need return
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -319,8 +395,13 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			testSender.setSoTimeout(5000);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
+			Object[] expected = {};
+			assertEquals(ServerMain.errorMsg + 3, new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -344,11 +425,16 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {"1", false};
 			assertEquals("Same medication", expected[0], actual[0]);
 			assertEquals("Same delete past", expected[1], actual[1]);
+			assertEquals("Success", new String(r.getData(),0,r.getLength()));
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -372,11 +458,16 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.setSoTimeout(5000);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
 			Object[] expected = {"1", true};
 			assertEquals("Same patient", expected[0], actual[0]);
 			assertEquals("Same delete past", expected[1], actual[1]);
+			assertEquals("Success", new String(r.getData(),0,r.getLength()));
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -394,8 +485,13 @@ public class ServerMainTest {
 			byte data[] = m.getBytes();
 			DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 8700);
 			testSender.send(p);
+			testSender.setSoTimeout(5000);
+			data = new byte[512];
+			DatagramPacket r = new DatagramPacket(data, data.length);
+			testSender.receive(r);
 			testSender.close();
-			Thread.sleep(300);
+			Object[] expected = {};
+			assertEquals(ServerMain.errorMsg + 3, new String(r.getData(), 0, r.getLength()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
