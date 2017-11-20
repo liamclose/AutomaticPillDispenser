@@ -49,15 +49,12 @@ public class Database{
 	public static String toSQLDateTime(java.util.Date date) {
 		System.out.println(date.toString());
 		return (new java.sql.Date(date.getTime()).toString() + " " + date.getHours() + ":" + date.getMinutes());
-		
 	}
 	
-	public void medicationApplied(java.util.Date date, Medication m) {
+	public void medicationApplied(String date, Medication m) {
 		try {
 			Statement stmt = con.createStatement();
-			String s = toSQLDateTime(date);
-			System.out.println(s);
-			int i = stmt.executeUpdate("INSERT into dosages (medication_id, date, patient_id) VALUES ( '" + m.getID() + "' , '" + s + "', " + m.getPatientID() + ");");
+			int i = stmt.executeUpdate("INSERT into dosages (medication_id, date, patient_id) VALUES ( '" + m.getID() + "' , '" + date + "', " + m.getPatientID() + ");");
 			System.out.println(i);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -70,6 +67,36 @@ public class Database{
 			ResultSet rs = stmt.executeQuery("SELECT * FROM patient where patient_name like '%" + name + "%';");
 			if (rs.next()) {
 				return new Patient(rs);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+	
+	public Patient queryPatientById(String id) {
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM patient where id ='" + id + "';");
+			if (rs.next()) {
+				return new Patient(rs);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+	
+	public Medication queryMedicationById(String id) {
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where id ='" + id + "';");
+			if (rs.next()) {
+				return new Medication(rs);
 			} else {
 				return null;
 			}
@@ -96,6 +123,44 @@ public class Database{
 		}
 	}
 	
+	public void setRoom(String patientID, String room) {
+		//test this for real with database
+		try {
+			Statement stmt = con.createStatement();
+			int i = stmt.executeUpdate("UPDATE patient set room_number '" + room + "' where patient_id = '" + patientID + "';");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deletePatient(String id, boolean past) {
+		try {
+			Statement stmt = con.createStatement();
+			int i = stmt.executeUpdate("DELETE from patient where id = '" + id + "' ;");
+			i = stmt.executeUpdate("DELETE from medication where patient_id = '" + id + "' ;");
+			if (past) {
+				i = stmt.executeUpdate("DELETE from dosages where patient_id = '" + id + "' ;");
+			}
+			System.out.println(i);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void deleteMedication(String id, boolean past) {
+		try {
+			Statement stmt = con.createStatement();
+			int i = stmt.executeUpdate("DELETE from medication where id = '" + id + "' ;");
+			if (past) {
+				i = stmt.executeUpdate("DELETE from dosages where medication_id = '" + id + "' ;");
+			}
+			System.out.println(i);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
 	public void dispense() {
 		try {
 			
@@ -111,8 +176,11 @@ public class Database{
 
 		}
 	}
-	/*public static void main(String args[]) {  
-		try {  
+	public static void main(String args[]) throws ClassNotFoundException {  
+		Database b = new Database();
+		System.out.println(b.queryPatientByName("nope"));
+	}
+	/*	try {  
 			Class.forName("com.mysql.jdbc.Driver");  
 			Connection con=DriverManager.getConnection(DATABASE, USER, PASS);
 			Patient p = queryPatientByName(con, "test");
