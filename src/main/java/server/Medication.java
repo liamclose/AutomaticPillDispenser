@@ -16,6 +16,11 @@ public class Medication {
 		this.patient_id = r.getInt("patient_id");
 	}
 	
+	public Medication(String medication, int dosage, int pid) {
+		this.name = medication;
+		this.dosage = dosage;
+		this.patient_id = pid;
+	}
 	
 	public String toString() {
 		return " " + this.id + "    " + this.patient_id + "    " + this.name + "    " + this.dosage;
