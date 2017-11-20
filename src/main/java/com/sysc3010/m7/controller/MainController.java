@@ -7,14 +7,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sysc3010.m7.model.PatientSearchForm;
-import com.sysc3010.m7.service.ScheduleService;
+import com.sysc3010.m7.service.DispenseService;
+import com.sysc3010.m7.sql.Database;
 
 @Controller
 public class MainController {
 
     @Autowired
-    ScheduleService scheduleService;
-    
+    DispenseService scheduleService;
+
+    @Autowired
+    Database db;
 
     @RequestMapping(value = "/main", method = RequestMethod.GET)
     public ModelAndView mainGet() {
@@ -24,7 +27,4 @@ public class MainController {
         return mav;
     }
 
-    
-
-    
 }
