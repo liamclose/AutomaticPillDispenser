@@ -265,7 +265,6 @@ public class ServerMain extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Received");
 		//	System.out.println(receivedMessage);
 		}
 	}

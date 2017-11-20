@@ -54,8 +54,6 @@ public class ServerMainTest {
 	static Object[] actual = {};
 	
 	public static void setActual(Object[] o) {
-		
-		System.out.println("Inserting" + o);
 		actual =  o.clone();
 	}
 	@Test
