@@ -21,6 +21,8 @@ public class EditScheduleController {
     @RequestMapping(value = RequestMappings.EDIT_SCHEDULE_URL, method = RequestMethod.GET)
     public ModelAndView getEdit() {
         ModelAndView mav = new ModelAndView(RequestMappings.EDIT_SCHEDULE);
+        mav.addObject("patient", null);
+        mav.addObject("patientSearchForm", new PatientSearchForm());
         return mav;
     }
 

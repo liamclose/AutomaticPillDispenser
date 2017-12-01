@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sysc3010.m7.model.PatientSearchForm;
 import com.sysc3010.m7.model.RequestMappings;
 import com.sysc3010.m7.service.DispenseService;
-import com.sysc3010.m7.sql.Database;
 
 @Controller
 public class MainController {
@@ -21,8 +20,7 @@ public class MainController {
     public ModelAndView mainGet() {
         ModelAndView mav = new ModelAndView(RequestMappings.MAIN);
         mav.addObject("patientList", scheduleService.getAllPatients());
-        mav.addObject("patientForm", new PatientSearchForm());
+        mav.addObject("patientSearchForm", new PatientSearchForm());
         return mav;
     }
-
 }

@@ -28,7 +28,7 @@ public class UdpTest {
         // receivePacket = mock(DatagramPacket.class);
 
         onePi c = new onePi();
-        c.sendto();
+        c.sendto("null");
 
         byte[] data = new byte[512];
 
