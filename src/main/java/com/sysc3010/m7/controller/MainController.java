@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sysc3010.m7.model.PatientSearchForm;
+import com.sysc3010.m7.model.RequestMappings;
 import com.sysc3010.m7.service.DispenseService;
 import com.sysc3010.m7.sql.Database;
 
@@ -14,14 +15,11 @@ import com.sysc3010.m7.sql.Database;
 public class MainController {
 
     @Autowired
-    DispenseService scheduleService;
+    private DispenseService scheduleService;
 
-    @Autowired
-    Database db;
-
-    @RequestMapping(value = "/main", method = RequestMethod.GET)
+    @RequestMapping(value = RequestMappings.MAIN_URL, method = RequestMethod.GET)
     public ModelAndView mainGet() {
-        ModelAndView mav = new ModelAndView("/main");
+        ModelAndView mav = new ModelAndView(RequestMappings.MAIN);
         mav.addObject("patientList", scheduleService.getAllPatients());
         mav.addObject("patientForm", new PatientSearchForm());
         return mav;

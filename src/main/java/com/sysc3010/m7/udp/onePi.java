@@ -1,9 +1,15 @@
 package com.sysc3010.m7.udp;
 
 import java.io.IOException;
-import java.io.*;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class onePi {
     private DatagramPacket sendPacket;
     private DatagramSocket sendSocket;
@@ -16,11 +22,11 @@ public class onePi {
         sendSocket = new DatagramSocket();
     }
 
-    public boolean sendto() throws UnknownHostException {
+    public boolean sendto(String ip) throws UnknownHostException {
         byte[] data = new byte[1];
         data[0] = (byte) count;
 
-        sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), sendPort);
+        sendPacket = new DatagramPacket(data, data.length, InetAddress.getByName(ip), sendPort);
 
         try {
             // if (received){
@@ -35,6 +41,6 @@ public class onePi {
 
     public static void main(String args[]) throws IOException {
         onePi c = new onePi();
-        c.sendto();
+        //c.sendto();
     }
 }

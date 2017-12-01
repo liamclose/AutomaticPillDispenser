@@ -15,15 +15,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         registry.addResourceHandler("resources/**").addResourceLocations("/resources/");
-
     }
 
     @Bean
     public InternalResourceViewResolver resourceMapping() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-
         resolver.setPrefix("WEB-INF/views/");
         resolver.setSuffix(".jsp");
         return resolver;

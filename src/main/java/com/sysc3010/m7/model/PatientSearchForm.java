@@ -7,16 +7,16 @@ public class PatientSearchForm {
 
     }
 
-    public PatientSearchForm(String name) {
-        this.id = name;
+    public PatientSearchForm(String id) {
+        this.id = id;
     }
 
-    public String getName() {
+    public String getId() {
         return id;
     }
 
-    public void setName(String name) {
-        this.id = name;
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

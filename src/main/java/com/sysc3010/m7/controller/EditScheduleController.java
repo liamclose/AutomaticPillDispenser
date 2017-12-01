@@ -8,30 +8,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sysc3010.m7.model.PatientSearchForm;
-import com.sysc3010.m7.service.DispenseService;
-import com.sysc3010.m7.sql.Database;
+import com.sysc3010.m7.model.RequestMappings;
+import com.sysc3010.m7.service.DatabaseService;
+import com.sysc3010.m7.sql.Patient;
 
 @Controller
 public class EditScheduleController {
 
     @Autowired
-    private DispenseService scheduleService;
-    
-    @Autowired
-    Database db;
-    
-    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    private DatabaseService dbService;
+
+    @RequestMapping(value = RequestMappings.EDIT_SCHEDULE_URL, method = RequestMethod.GET)
     public ModelAndView getEdit() {
-        ModelAndView mav = new ModelAndView("edit");
+        ModelAndView mav = new ModelAndView(RequestMappings.EDIT_SCHEDULE);
         return mav;
     }
-    
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+
+    @RequestMapping(value = RequestMappings.EDIT_SCHEDULE_URL, method = RequestMethod.POST)
     public ModelAndView postEdit(@ModelAttribute("patientForm") PatientSearchForm patientForm) {
-        ModelAndView mav = new ModelAndView("edit");
-        mav.addObject("patientForm", patientForm);
+        ModelAndView mav = new ModelAndView(RequestMappings.EDIT_SCHEDULE);
+        Patient patient = dbService.getPatientById(patientForm.getId());
+        mav.addObject("patient", patient);
         return mav;
     }
-    
- 
 }
