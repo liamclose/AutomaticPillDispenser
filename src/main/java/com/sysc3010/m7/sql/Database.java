@@ -13,7 +13,7 @@ public class Database{
 	
 	public static final String DATABASE = "jdbc:mysql://localhost:3306/dispenser";
 	public static final String USER = "root";
-	public static final String PASS = "tester";
+	public static final String PASS = "password";
 	protected Connection con;
 	
 	public Database() throws ClassNotFoundException {
