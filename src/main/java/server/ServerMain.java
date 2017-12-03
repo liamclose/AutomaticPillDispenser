@@ -182,6 +182,23 @@ public class ServerMain extends Thread {
 				receiveSocket.send(reply);				
 			}
 			return;
+		case("all"):
+			System.out.println("GetPatients");
+			ArrayList<Patient> pats = d.getPatients();
+		/*	if (pasts==null) {
+				System.out.println("null");
+				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			}*/
+			//else {
+				gson = new GsonBuilder().create();
+				s = new StringWriter();
+		        gson.toJson(pats, s);
+		        String a = s.toString();
+				reply = new DatagramPacket(a.getBytes(), a.length(), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);				
+		//	}
+			return;
 		case("insert medication"):
 			System.out.println("New Medication");
 			if (validateInsertMedication(params)) {
@@ -292,8 +309,8 @@ public class ServerMain extends Thread {
         String a = s.toString();
         System.out.println(a);
         ArrayList<Medication> p = gson.fromJson(a, ArrayList.class);
-        System.out.println(p.toString()); 
-        
+        ArrayList<Patient> j = m.d.getPatients();
+        System.out.println(j.toString()); 
       //  m.d.insertMedication(1, "test2", 3, "14:08:00");
         m.receive();
 	
