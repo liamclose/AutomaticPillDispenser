@@ -20,13 +20,13 @@ public class SpringApplicationInit implements WebApplicationInitializer {
         // Manage the lifecycle of the root application context
         container.addListener(new ContextLoaderListener(rootContext));
 
-        // Create the dispatcher servlet's Spring application context
-        AnnotationConfigWebApplicationContext dispatcherContext = new AnnotationConfigWebApplicationContext();
-        dispatcherContext.register(WebConfig.class);
+//        // Create the dispatcher servlet's Spring application context
+//        AnnotationConfigWebApplicationContext dispatcherContext = new AnnotationConfigWebApplicationContext();
+//        dispatcherContext.register(WebConfig.class);
 
         // Register and map the dispatcher servlet
         ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher",
-                new DispatcherServlet(dispatcherContext));
+                new DispatcherServlet(rootContext));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
     }

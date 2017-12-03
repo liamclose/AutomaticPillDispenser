@@ -14,9 +14,9 @@
 		<t:navList/>
 		
 		<div class="row">
-			<div class="col-12"> 
+			
 				<jsp:doBody />
-			</div>
+			
 		</div>
 	</div>
 </body>
