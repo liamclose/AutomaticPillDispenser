@@ -8,6 +8,8 @@ public class NewPatientForm {
     private int id;
     private Date time;
 
+    public NewPatientForm() {
+    }
     public NewPatientForm(String name, int room, int id, Date time) {
         super();
         this.name = name;

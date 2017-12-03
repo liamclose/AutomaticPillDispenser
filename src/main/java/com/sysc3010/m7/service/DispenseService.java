@@ -28,7 +28,7 @@ public class DispenseService {
 
         if (checkTimeToDispense(patient.getDispenseTme())) {
             try {
-                return sender.sendto();
+                return sender.sendto("null");
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }

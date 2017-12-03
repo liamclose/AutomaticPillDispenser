@@ -6,26 +6,22 @@
 
 
 <t:template>
-
-	add new patient
-	<form:form method="POST" action="/m7/new" csClass="form-group row"
-		modelAttribute="newPatientForm">
-		
-		<div class="col-md-12">
+	<div class="col-md-12">
+		<h1>Add new Patient</h1>
+	</div>
+	<div class="col-md-12">
+		<form:form method="POST" action="/m7/new" csClass="form-group row"
+			modelAttribute="newPatientForm">
 			<label>Name:</label>
-			<form:input class="form-control" path="name"/>
-		</div>
-		<div class="col-md-12">
+			<form:input class="form-control" path="name" />
 			<label>Room:</label>
-			<form:input class="form-control" path="room"/>
-		</div>
-		<div class="col-md-12">
+			<form:input class="form-control" path="room" />
 			<label>id:</label>
-			<form:input class="form-control" path="id"/>
-		</div>
-		<input type="submit" class="form-control"/>
-	</form:form>
-
-
-
+			<form:input class="form-control" path="id" />
+			<br>
+			<div>
+				<input type="submit" style="width:" class="form-control" />
+			</div>
+		</form:form>
+	</div>
 </t:template>

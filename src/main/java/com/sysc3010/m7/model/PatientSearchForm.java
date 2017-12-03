@@ -4,7 +4,6 @@ public class PatientSearchForm {
     private String id;
 
     public PatientSearchForm() {
-
     }
 
     public PatientSearchForm(String id) {

@@ -31,7 +31,7 @@ public class DispenseServiceTest {
         mockDb = mock(Database.class);
         mockSender = mock(onePi.class);
         try {
-            when(mockSender.sendto()).thenReturn(true);
+            when(mockSender.sendto("null")).thenReturn(true);
         } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

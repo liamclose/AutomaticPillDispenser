@@ -123,7 +123,6 @@ public class DatabaseService {
             // TODO Try probably shouldn't wrap everything
             e.printStackTrace();
         }
-
         return null;
     }
 }
