@@ -9,19 +9,35 @@
 	<div class="col-md-12">
 		<h1>Add new Patient</h1>
 	</div>
-	<div class="col-md-12">
-		<form:form method="POST" action="/m7/new" csClass="form-group row"
-			modelAttribute="newPatientForm">
+	<form:form method="POST" action="/m7/new" class="row"
+		modelAttribute="newPatientForm">
+		<div class="col-md-4">
 			<label>Name:</label>
 			<form:input class="form-control" path="name" />
+		</div>
+		<div class="col-md-4">
 			<label>Room:</label>
 			<form:input class="form-control" path="room" />
+		</div>
+		<div class="col-md-4">
 			<label>id:</label>
 			<form:input class="form-control" path="id" />
-			<br>
-			<div>
-				<input type="submit" style="width:" class="form-control" />
-			</div>
-		</form:form>
-	</div>
+		</div>
+		<div class="col-md-4">
+			<label>Medication Name:</label>
+			<form:input class="form-control" path="medName" />
+		</div>
+		<div class="col-md-4">
+			<label>Dosage</label>
+			<form:input class="form-control" path="dosage" />
+		</div>
+		<div class="col-md-4">
+			<label>Medication Id:</label>
+			<form:input class="form-control" path="medId" />
+		</div>
+		<div class="col-md-4" style="margin-top:10px;">
+			<input type="submit" style="width:" class="btn btn-default" />
+		</div>
+	</form:form>
+
 </t:template>

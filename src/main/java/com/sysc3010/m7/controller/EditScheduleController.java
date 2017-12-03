@@ -10,7 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sysc3010.m7.model.PatientSearchForm;
 import com.sysc3010.m7.model.RequestMappings;
 import com.sysc3010.m7.service.DatabaseService;
-import com.sysc3010.m7.sql.Patient;
+
+import server.Patient;
 
 @Controller
 public class EditScheduleController {
@@ -30,6 +31,10 @@ public class EditScheduleController {
     public ModelAndView postEdit(@ModelAttribute("patientForm") PatientSearchForm patientForm) {
         ModelAndView mav = new ModelAndView(RequestMappings.EDIT_SCHEDULE);
         Patient patient = dbService.getPatientById(patientForm.getId());
+        mav.addObject("patientSearchForm", patientForm);
+        if(patient == null) {
+            mav.addObject("message", "no patient found with id "+patientForm.getId());
+        }
         mav.addObject("patient", patient);
         return mav;
     }

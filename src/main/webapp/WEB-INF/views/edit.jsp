@@ -6,14 +6,18 @@
 
 <t:template>
 
+	<c:if test="${not empty message }">
+		<div class="col-md-12">${message }</div>
+	</c:if>
 	<c:if test="${empty patient}">
 		<div class="col-md-12">
 			<h1>Search by Patient Id</h1>
 		</div>
 		<div class="col-md-6">
-			<form:form action="m7/edit" cssClass="form-group"
+			<form:form action="edit" cssClass="form-group"
 				modelAttribute="patientSearchForm">
 				<form:input class="form-control" path="id" />
+				<br>
 				<input type="submit" class="btn btn-default" />
 			</form:form>
 		</div>

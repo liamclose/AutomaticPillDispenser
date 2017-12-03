@@ -8,14 +8,22 @@ public class NewPatientForm {
     private int id;
     private Date time;
 
+    private String medName;
+    private int dosage;
+    private int medId;
+
     public NewPatientForm() {
     }
-    public NewPatientForm(String name, int room, int id, Date time) {
+
+    public NewPatientForm(String name, int room, int id, Date time, String medName, int dosage, int medId) {
         super();
         this.name = name;
         this.room = room;
         this.id = id;
         this.time = time;
+        this.medName = medName;
+        this.dosage = dosage;
+        this.medId = medId;
     }
 
     public String getName() {
@@ -50,4 +58,27 @@ public class NewPatientForm {
         this.time = time;
     }
 
+    public String getMedName() {
+        return medName;
+    }
+
+    public void setMedName(String medName) {
+        this.medName = medName;
+    }
+
+    public int getDosage() {
+        return dosage;
+    }
+
+    public void setDosage(int dosage) {
+        this.dosage = dosage;
+    }
+
+    public int getMedId() {
+        return medId;
+    }
+
+    public void setMedId(int medId) {
+        this.medId = medId;
+    }
 }

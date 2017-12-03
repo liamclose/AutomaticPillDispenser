@@ -126,7 +126,7 @@ public class Database{
 		try {
 			ArrayList<Medication> meds = new ArrayList<Medication>();
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where patient_id = " + p.getID() + ";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where patient_id = " + p.getId() + ";");
 			while(rs.next())  {
 				Medication m = new Medication(rs);
 				meds.add(m);

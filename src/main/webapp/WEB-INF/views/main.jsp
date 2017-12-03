@@ -28,9 +28,9 @@
 	<div class="col-md-12">
 		<table>
 			<tbody>
-				<c:forEach items="${patientList}" var="patientName">
+				<c:forEach items="${patientList}" var="patient">
 					<tr>
-						<td>${patientName }</td>
+						<td>${patient.name }</td>
 					</tr>
 				</c:forEach>
 			</tbody>
