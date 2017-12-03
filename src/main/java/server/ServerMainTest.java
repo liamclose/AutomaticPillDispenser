@@ -65,7 +65,7 @@ public class ServerMainTest {
 			             setActual(args);
 			             return "Ok";
 			         }
-			 }).when(mockConnection).insertPatient(Mockito.anyString(), Mockito.anyInt());
+			 });//.when(mockConnection).insertPatient(Mockito.anyString(), Mockito.anyInt());
 		DatagramSocket testSender;
 		try {
 			String m = "Insert Patient, Test Patient, 7";
@@ -91,7 +91,7 @@ public class ServerMainTest {
 	@Test
 	public void testNewPatientInvalid() {
 		System.out.println("Testing adding an invalid patient");
-		Mockito.doThrow(new RuntimeException("If this happens, something went wrong.")).when(mockConnection).insertPatient("Test Patient", 7);
+		Mockito.doThrow(new RuntimeException("If this happens, something went wrong.")).when(mockConnection);//.insertPatient("Test Patient", 7);
 		DatagramSocket testSender;
 		try {
 			String m = "insert patient, Test Patient, re7";
@@ -224,7 +224,7 @@ public class ServerMainTest {
 			             setActual(args);
 			             return "Ok";
 			         }
-			 }).when(mockConnection).insertMedication(Mockito.anyInt(), Mockito.anyString(), Mockito.anyInt());
+			 });//.when(mockConnection).insertMedication(Mockito.anyInt(), Mockito.anyString(), Mockito.anyInt());
 		Mockito.when(mockConnection.queryPatientById(Mockito.anyString())).thenReturn(pat);
 		DatagramSocket testSender;
 		try {
@@ -253,7 +253,7 @@ public class ServerMainTest {
 	public void testNewMedicationDispenserDoesNotExist() {
 		System.out.println("Creating medication for nonexistent patient/dispenser");
 		Mockito.when(mockConnection.queryPatientById(Mockito.anyString())).thenReturn(null);
-		Mockito.doThrow(new RuntimeException("If this happens, something went wrong.")).when(mockConnection).insertMedication(Mockito.anyInt(), Mockito.anyString(), Mockito.anyInt());
+		Mockito.doThrow(new RuntimeException("If this happens, something went wrong.")).when(mockConnection);//.insertMedication(Mockito.anyInt(), Mockito.anyString(), Mockito.anyInt());
 		DatagramSocket testSender;
 		try {
 			String m = "Insert Medication, 100, Test Medication, 200";
