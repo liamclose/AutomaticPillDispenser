@@ -136,6 +136,7 @@ public class ServerMain extends Thread {
 		StringWriter s;
 		DatagramPacket reply;
 		System.out.println("Got: " + params);
+		System.out.println(params.toString());
 		switch(params[0].toLowerCase()) {
 		case("write patient"):
 			System.out.println("Add patient");
@@ -169,7 +170,7 @@ public class ServerMain extends Thread {
 			System.out.println("GetPatient");
 			pat = d.queryPatientById(params[1]);
 			if (pat==null) {
-				System.out.println("null");
+				
 				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
 				receiveSocket.send(reply);
 			}
@@ -181,6 +182,23 @@ public class ServerMain extends Thread {
 				reply = new DatagramPacket(a.getBytes(), a.length(), p.getAddress(), p.getPort());
 				receiveSocket.send(reply);				
 			}
+			return;
+		case("all"):
+			System.out.println("GetPatients");
+			ArrayList<Patient> pats = d.getPatients();
+		/*	if (pasts==null) {
+				System.out.println("null");
+				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);
+			}*/
+			//else {
+				gson = new GsonBuilder().create();
+				s = new StringWriter();
+		        gson.toJson(pats, s);
+		        String a = s.toString();
+				reply = new DatagramPacket(a.getBytes(), a.length(), p.getAddress(), p.getPort());
+				receiveSocket.send(reply);				
+		//	}
 			return;
 		case("insert medication"):
 			System.out.println("New Medication");
@@ -211,7 +229,7 @@ public class ServerMain extends Thread {
 			gson = new GsonBuilder().create();
 			s = new StringWriter();
 			gson.toJson(meds, s);
-			String a = s.toString();
+			a = s.toString();
 			reply = new DatagramPacket(a.getBytes(), a.length(), p.getAddress(), p.getPort());
 			receiveSocket.send(reply);	
 			return;
@@ -269,10 +287,11 @@ public class ServerMain extends Thread {
 			try {
 				receiveSocket.setSoTimeout(600);
 				receiveSocket.receive(receivePacket);
+				System.out.println("dispatching");
 				dispatch(receivePacket);
 
 			} catch (SocketTimeoutException e) {
-				System.out.println("timed out");
+				
 			}
 			catch (IOException e) {
 				System.out.print("IO Exception: likely:");
@@ -285,15 +304,15 @@ public class ServerMain extends Thread {
 	}
 	public static void main(String[] args) {
 		ServerMain m = new ServerMain();
-		ArrayList<Medication> ed = m.d.queryMedicationByTime("13:57");
+		/*ArrayList<Medication> ed = m.d.queryMedicationByTime("13:57");
 		Gson gson = new GsonBuilder().create();
 		StringWriter s = new StringWriter();
         gson.toJson(ed, s);
         String a = s.toString();
         System.out.println(a);
         ArrayList<Medication> p = gson.fromJson(a, ArrayList.class);
-        System.out.println(p.toString()); 
-        
+        ArrayList<Patient> j = m.d.getPatients();
+        System.out.println(Database.USER + Database.PASS); */
       //  m.d.insertMedication(1, "test2", 3, "14:08:00");
         m.receive();
 	
