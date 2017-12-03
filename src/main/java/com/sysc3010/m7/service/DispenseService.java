@@ -8,9 +8,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sysc3010.m7.sql.Database;
-import com.sysc3010.m7.sql.Patient;
 import com.sysc3010.m7.udp.onePi;
+
+import server.Patient;
 
 @Service
 public class DispenseService {
@@ -18,15 +18,12 @@ public class DispenseService {
     private static final long TIME_THRESHOLD = 5 * 60 * 1000;
 
     @Autowired
-    Database db;
-
-    @Autowired
-    onePi sender;
+    private onePi sender;
 
     // Send signal to dispenser
     public boolean dispenseMeds(Patient patient) {
 
-        if (checkTimeToDispense(patient.getDispenseTme())) {
+        if (checkTimeToDispense(patient.getMedications().get(0).getTime())) {
             try {
                 return sender.sendto("null");
             } catch (UnknownHostException e) {
@@ -37,14 +34,14 @@ public class DispenseService {
     }
 
     // check that patient time is within one minute of current time
-    private boolean checkTimeToDispense(Date patientDate) {
-
-        long difference = System.currentTimeMillis() - patientDate.getTime();
-        if (difference <= TIME_THRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean checkTimeToDispense(String time) {
+return true;
+//        long difference = System.currentTimeMillis() - Integer.parseInt(time);
+//        if (difference <= TIME_THRESHOLD) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
     public List<String> getAllPatients() {

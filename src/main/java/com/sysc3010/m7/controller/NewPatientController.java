@@ -11,7 +11,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.sysc3010.m7.model.NewPatientForm;
 import com.sysc3010.m7.model.RequestMappings;
 import com.sysc3010.m7.service.DatabaseService;
-import com.sysc3010.m7.sql.Patient;
+
+import server.Patient;
 
 @Controller
 public class NewPatientController {
@@ -31,7 +32,6 @@ public class NewPatientController {
         ModelAndView mav;
         Patient newPatient = new Patient(newPatientForm.getName(), newPatientForm.getRoom());
 
-        newPatient.setDispenseTme(newPatientForm.getTime());
         newPatient.setId(newPatientForm.getId());
 
         if (DatabaseService.writePatientData(newPatient)) {

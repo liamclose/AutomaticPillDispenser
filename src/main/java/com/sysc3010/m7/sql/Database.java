@@ -13,7 +13,7 @@ public class Database{
 	
 	public static final String DATABASE = "jdbc:mysql://localhost:3306/dispenser";
 	public static final String USER = "root";
-	public static final String PASS = "password";
+	public static final String PASS = "tester";
 	protected Connection con;
 	
 	public Database() throws ClassNotFoundException {
@@ -23,6 +23,22 @@ public class Database{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Patient> getPatients() {
+		try {
+			ArrayList<Patient> pats = new ArrayList<Patient>();
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM patient;");
+			while(rs.next())  {
+				Patient p = new Patient(rs);
+				pats.add(p);
+			}
+			return pats;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	
@@ -110,7 +126,7 @@ public class Database{
 		try {
 			ArrayList<Medication> meds = new ArrayList<Medication>();
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where patient_id = " + p.getID() + ";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM medication where patient_id = " + p.getId() + ";");
 			while(rs.next())  {
 				Medication m = new Medication(rs);
 				meds.add(m);

@@ -6,9 +6,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -17,13 +19,16 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.sysc3010.m7.sql.Medication;
-import com.sysc3010.m7.sql.Patient;
+
+import server.Medication;
+import server.Patient;
 
 @Service
 public class DatabaseService {
 
-    private String databaseAddress = "172.17.41.223";
+     private String databaseAddress = "10.0.0.71";
+   // private String databaseAddress = "172.17.58.166";
+    private int port = 8700;
 
     private Gson gson;
 
@@ -33,6 +38,7 @@ public class DatabaseService {
     public void setup() {
         try {
             inSocket = new DatagramSocket();
+            inSocket.setSoTimeout(1000);
             gson = new GsonBuilder().create();
         } catch (SocketException e) {
             // TODO Auto-generated catch block
@@ -44,7 +50,7 @@ public class DatabaseService {
         String patientJson = gson.toJson(newPatient);
         String packetString = "write patient, " + patientJson;
         DatagramPacket newPatientPacket = new DatagramPacket(packetString.getBytes(), packetString.length());
-        newPatientPacket.setSocketAddress(new InetSocketAddress("172.17.41.223", 8700));
+        newPatientPacket.setSocketAddress(new InetSocketAddress(databaseAddress, port));
         byte[] patientData = new byte[512];
         DatagramPacket responsePacket = new DatagramPacket(patientData, 512);
         try {
@@ -60,7 +66,7 @@ public class DatabaseService {
 
     public void sendPacket(String packetString) {
         DatagramPacket newPatientPacket = new DatagramPacket(packetString.getBytes(), packetString.length());
-        newPatientPacket.setSocketAddress(new InetSocketAddress("172.17.41.223", 8700));
+        newPatientPacket.setSocketAddress(new InetSocketAddress(databaseAddress, port));
         try {
             inSocket.send(newPatientPacket);
         } catch (IOException e) {
@@ -69,14 +75,18 @@ public class DatabaseService {
         }
     }
 
-    public String receivePacket() {
+    public String receivePacket() throws SocketTimeoutException {
         byte[] patientData = new byte[512];
         DatagramPacket responsePacket = new DatagramPacket(patientData, 512);
+
         try {
             inSocket.receive(responsePacket);
         } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
+            if (e instanceof SocketTimeoutException) {
+                throw new SocketTimeoutException(e.getMessage());
+            } else {
+                e.printStackTrace();
+            }
         }
         return new String(responsePacket.getData(), 0, responsePacket.getLength());
     }
@@ -91,8 +101,12 @@ public class DatabaseService {
 
         sendPacket(packetString);
 
-        String jsonResponse = receivePacket();
-        System.out.println(jsonResponse);
+        String jsonResponse = null;
+        try {
+            jsonResponse = receivePacket();
+        } catch (SocketTimeoutException e) {
+            return new ArrayList<Medication>();
+        }
 
         TypeToken<ArrayList<Medication>> tt = new TypeToken<ArrayList<Medication>>() {
         };
@@ -107,7 +121,7 @@ public class DatabaseService {
         try {
             String getById = "get id, " + id;
             DatagramPacket idPacket = new DatagramPacket(getById.getBytes(), getById.getBytes().length);
-            idPacket.setSocketAddress(new InetSocketAddress("172.17.41.223", 8700));
+            idPacket.setSocketAddress(new InetSocketAddress(databaseAddress, port));
             inSocket.send(idPacket);
 
             byte[] patientData = new byte[512];
@@ -124,5 +138,25 @@ public class DatabaseService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Patient> getAllPatients() {
+        String getAll = "all";
+        DatagramPacket idPacket = new DatagramPacket(getAll.getBytes(), getAll.getBytes().length);
+        idPacket.setSocketAddress(new InetSocketAddress(databaseAddress, port));
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = receivePacket();
+            System.out.println(jsonResponse);
+        } catch (SocketTimeoutException e) {
+            return new ArrayList<Patient>();
+        }
+        TypeToken<ArrayList<Patient>> tt = new TypeToken<ArrayList<Patient>>() {
+        };
+        Type type = tt.getType();
+        ArrayList<Patient> patients = gson.fromJson(jsonResponse, type);
+
+        return patients;
     }
 }

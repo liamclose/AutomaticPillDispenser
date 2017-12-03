@@ -2,7 +2,6 @@ package com.sysc3010.m7.udp.test;
 
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -28,8 +27,8 @@ public class test {
 		//receivePacket = mock(DatagramPacket.class);
 		
 		
-		onePi c = new onePi();
-		c.sendto();
+		//onePi c = new onePi();
+		//c.sendto();
 		
 
 		byte[] data = new byte[512];

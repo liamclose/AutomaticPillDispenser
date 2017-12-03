@@ -1,8 +1,9 @@
 package com.sysc3010.m7.udp;
 
 import java.io.IOException;
-import java.io.*;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 public class second {
 
 	private DatagramPacket receivePacket;
