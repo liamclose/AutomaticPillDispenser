@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sysc3010.m7.service.DatabaseService;
+import com.sysc3010.m7.udp.Sender;
 import com.sysc3010.m7.udp.onePi;
 
 import server.Medication;
@@ -22,9 +23,10 @@ public class ScheduleManager {
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 
     @Autowired
-    private onePi sender;
+    private Sender sender;
     @Autowired
     private DatabaseService databaseService;
+    
 
     private String dispenserIp = "10.0.0.2";
     
@@ -37,14 +39,15 @@ public class ScheduleManager {
             try {
                 List<Medication> meds = databaseService.getMedsToBeDispensed();
                 if (meds.size() >= 1) {
-                    sender.sendto(dispenserIp);
+                    System.out.println("sending");
+                    sender.sendto();
                 }
             } catch (UnknownHostException e) {
                 // TODO Handle udp errors. Should mark patient's dispenser as needing service
                 e.printStackTrace();
             }
 
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
     @PreDestroy

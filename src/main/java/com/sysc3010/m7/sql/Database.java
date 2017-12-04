@@ -1,6 +1,5 @@
 package com.sysc3010.m7.sql;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;

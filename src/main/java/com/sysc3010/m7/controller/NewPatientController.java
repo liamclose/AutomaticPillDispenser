@@ -9,9 +9,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.sysc3010.m7.model.NewPatientForm;
+import com.sysc3010.m7.model.PatientSearchForm;
 import com.sysc3010.m7.model.RequestMappings;
 import com.sysc3010.m7.service.DatabaseService;
 
+import server.Medication;
 import server.Patient;
 
 @Controller
@@ -33,15 +35,17 @@ public class NewPatientController {
         Patient newPatient = new Patient(newPatientForm.getName(), newPatientForm.getRoom());
 
         newPatient.setId(newPatientForm.getId());
-
-        if (DatabaseService.writePatientData(newPatient)) {
-            RedirectView r = new RedirectView(RequestMappings.EDIT_SCHEDULE);
+        Medication newMed = new Medication(newPatientForm.getMedName(), newPatientForm.getDosage(), newPatientForm.getId(), newPatientForm.getTime());
+        
+        if (DatabaseService.writePatientData(newPatient, newMed)) {
             mav = new ModelAndView("edit");
+            mav.addObject("patientSearchForm", new PatientSearchForm());
             mav.addObject("success", newPatient.getName() + " added to the database");
             mav.addObject("patient", newPatient);
         } else {
-            mav = new ModelAndView("failure");
-            mav.addObject("error", "Patient data invalid");
+            mav = new ModelAndView("edit");
+            mav.addObject("patientSearchForm", new PatientSearchForm());
+            mav.addObject("message", "Patient data invalid");
         }
         return mav;
     }

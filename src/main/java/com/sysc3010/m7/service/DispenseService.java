@@ -1,14 +1,13 @@
 package com.sysc3010.m7.service;
 
 import java.net.UnknownHostException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sysc3010.m7.udp.onePi;
+import com.sysc3010.m7.udp.Sender;
 
 import server.Patient;
 
@@ -18,14 +17,15 @@ public class DispenseService {
     private static final long TIME_THRESHOLD = 5 * 60 * 1000;
 
     @Autowired
-    private onePi sender;
+    private Sender sender;
 
     // Send signal to dispenser
     public boolean dispenseMeds(Patient patient) {
 
         if (checkTimeToDispense(patient.getMedications().get(0).getTime())) {
             try {
-                return sender.sendto("null");
+                sender.sendto();
+                return true;
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }

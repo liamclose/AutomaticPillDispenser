@@ -35,7 +35,11 @@
 			<label>Medication Id:</label>
 			<form:input class="form-control" path="medId" />
 		</div>
-		<div class="col-md-4" style="margin-top:10px;">
+		<div class="col-md-4">
+			<label>Dispensing time (format: hh:mm)</label>
+			<form:input class="form-control" path="time"/>
+		</div>
+		<div class="col-md-12" style="margin-top:10px;">
 			<input type="submit" style="width:" class="btn btn-default" />
 		</div>
 	</form:form>

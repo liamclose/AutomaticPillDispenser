@@ -6,7 +6,7 @@ public class NewPatientForm {
     private String name;
     private int room;
     private int id;
-    private Date time;
+    private String time;
 
     private String medName;
     private int dosage;
@@ -15,7 +15,7 @@ public class NewPatientForm {
     public NewPatientForm() {
     }
 
-    public NewPatientForm(String name, int room, int id, Date time, String medName, int dosage, int medId) {
+    public NewPatientForm(String name, int room, int id, String time, String medName, int dosage, int medId) {
         super();
         this.name = name;
         this.room = room;
@@ -50,11 +50,11 @@ public class NewPatientForm {
         this.id = id;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
