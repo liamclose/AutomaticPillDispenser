@@ -144,7 +144,6 @@ public class ServerMain extends Thread {
 			s = new StringWriter();
 			pat = gson.fromJson(params[1], Patient.class);
 			//if (params.length==3 && validateInsertPatient(params)) {
-				params = receivedPacket.split(", ", 2);
 				d.insertPatient(pat);
 				reply = new DatagramPacket("success".getBytes(), 7, p.getAddress(), p.getPort());
 				receiveSocket.send(reply);
@@ -200,16 +199,17 @@ public class ServerMain extends Thread {
 				receiveSocket.send(reply);				
 		//	}
 			return;
-		case("insert medication"):
+		case("write med"):
 			System.out.println("New Medication");
-			if (validateInsertMedication(params)) {
-				d.insertMedication(Integer.parseInt(params[1].trim()), params[2], Integer.parseInt(params[3].trim()), params[4]);
-				reply = new DatagramPacket("Success".getBytes(), 7, p.getAddress(), p.getPort());
-				receiveSocket.send(reply);
-			} else {
-				reply = new DatagramPacket((errorMsg + "2").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
-				receiveSocket.send(reply);
-			}
+			gson = new GsonBuilder().create();
+			s = new StringWriter();
+			System.out.println(params[1]);
+			System.out.println(params);
+			Medication med = gson.fromJson(params[1], Medication.class);
+		//if (params.length==3 && validateInsertPatient(params)) {
+			
+			d.insertMedication(med);
+		
 			return;
 		case("dosage applied"):
 			System.out.println("Add dosage");
@@ -304,6 +304,7 @@ public class ServerMain extends Thread {
 	}
 	public static void main(String[] args) {
 		ServerMain m = new ServerMain();
+		System.out.println(m.d.getPatients().toString());
 		/*ArrayList<Medication> ed = m.d.queryMedicationByTime("13:57");
 		Gson gson = new GsonBuilder().create();
 		StringWriter s = new StringWriter();

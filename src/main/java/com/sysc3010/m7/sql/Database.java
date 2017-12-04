@@ -13,7 +13,7 @@ public class Database{
 	
 	public static final String DATABASE = "jdbc:mysql://localhost:3306/dispenser";
 	public static final String USER = "root";
-	public static final String PASS = "tester";
+	public static final String PASS = "password";
 	protected Connection con;
 	
 	public Database() throws ClassNotFoundException {
@@ -52,10 +52,10 @@ public class Database{
 		}
 	}
 	
-	public void insertMedication(int patient_id, String medication, int dosage, String time) {
+	public void insertMedication(Medication med) {
 		try {
 			Statement stmt = con.createStatement();
-			int i = stmt.executeUpdate("INSERT into medication (medication, dosage, patient_id, time) VALUES ( '" + medication + "' , " + dosage + ", " + patient_id + ", '" + time + "');");
+			int i = stmt.executeUpdate("INSERT into medication (medication, dosage, patient_id, time) VALUES ( '" + med.getName() + "' , " + med.getDosage() + ", " + med.getPatient_id() + ", '" + med.getTime() + "');");
 			System.out.println(i);
 		} catch (Exception e) {
 			System.out.println(e);
