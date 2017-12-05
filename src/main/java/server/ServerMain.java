@@ -15,10 +15,11 @@ import com.google.gson.GsonBuilder;
 import com.mysql.jdbc.util.ErrorMappingsDocGenerator;
 import com.sysc3010.m7.sql.Database;
 
+//@author Megan Ardron
+
 public class ServerMain extends Thread {
 
 	DatagramSocket sendSocket, receiveSocket;
-	//String receivedMessage;
 	static String errorMsg = "Something went wrong. Error code:";
 	
 	//Error codes
@@ -41,7 +42,7 @@ public class ServerMain extends Thread {
 		}
 
 	}
-	
+	//used for testing
 	public void run() {
 		while (true) {
 			this.receive();
@@ -128,6 +129,10 @@ public class ServerMain extends Thread {
 		return false;
 	}
 	
+	/*
+	 * Dispatches based on the first part of the packet received
+	 * Params and function are comma separated
+	 */
 	public void dispatch(DatagramPacket p) throws IOException{
 		String receivedPacket = new String(p.getData(), 0, p.getLength());
 		String[] params = receivedPacket.split(", ");
@@ -135,23 +140,16 @@ public class ServerMain extends Thread {
 		Patient pat;
 		StringWriter s;
 		DatagramPacket reply;
-		System.out.println("Got: " + params);
-		System.out.println(params.toString());
+		System.out.println("Dispatching: " + params[0]);
 		switch(params[0].toLowerCase()) {
 		case("write patient"):
 			System.out.println("Add patient");
 			gson = new GsonBuilder().create();
 			s = new StringWriter();
 			pat = gson.fromJson(params[1], Patient.class);
-			//if (params.length==3 && validateInsertPatient(params)) {
 				d.insertPatient(pat);
 				reply = new DatagramPacket("success".getBytes(), 7, p.getAddress(), p.getPort());
 				receiveSocket.send(reply);
-		//	}
-		//	else {
-		//		reply = new DatagramPacket((errorMsg + "2").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
-			//	receiveSocket.send(reply);
-	//		}
 			return;		
 		case("set room"):
 			System.out.println("Set room");
@@ -169,7 +167,6 @@ public class ServerMain extends Thread {
 			System.out.println("GetPatient");
 			pat = d.queryPatientById(params[1]);
 			if (pat==null) {
-				
 				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
 				receiveSocket.send(reply);
 			}
@@ -185,19 +182,12 @@ public class ServerMain extends Thread {
 		case("all"):
 			System.out.println("GetPatients");
 			ArrayList<Patient> pats = d.getPatients();
-		/*	if (pasts==null) {
-				System.out.println("null");
-				reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
-				receiveSocket.send(reply);
-			}*/
-			//else {
 				gson = new GsonBuilder().create();
 				s = new StringWriter();
 		        gson.toJson(pats, s);
 		        String a = s.toString();
 				reply = new DatagramPacket(a.getBytes(), a.length(), p.getAddress(), p.getPort());
 				receiveSocket.send(reply);				
-		//	}
 			return;
 		case("write med"):
 			System.out.println("New Medication");
@@ -206,8 +196,6 @@ public class ServerMain extends Thread {
 			System.out.println(params[1]);
 			System.out.println(params);
 			Medication med = gson.fromJson(params[1], Medication.class);
-		//if (params.length==3 && validateInsertPatient(params)) {
-			
 			d.insertMedication(med);
 		
 			return;
@@ -262,11 +250,9 @@ public class ServerMain extends Thread {
 			if (validateMed(params)) {
 				Medication m = d.queryMedicationById(params[1]);
 				if (m==null) {
-					System.out.println("why");
 					reply = new DatagramPacket((errorMsg + "1").getBytes(), (errorMsg.length()+1), p.getAddress(), p.getPort());
 
 				} else {
-					System.out.println("not null");
 					reply = new DatagramPacket(m.toString().getBytes(), m.toString().length(), p.getAddress(), p.getPort());
 				}
 				receiveSocket.send(reply);
@@ -280,6 +266,9 @@ public class ServerMain extends Thread {
 		receiveSocket.send(reply);
 	}
 	
+	/*
+	 * loop forever, receiving a packet and then dispatching.
+	 */
 	public void receive() {
 		byte data[] = new byte[516];
 		DatagramPacket receivePacket = new DatagramPacket(data, data.length);
@@ -287,7 +276,6 @@ public class ServerMain extends Thread {
 			try {
 				receiveSocket.setSoTimeout(600);
 				receiveSocket.receive(receivePacket);
-				System.out.println("dispatching");
 				dispatch(receivePacket);
 
 			} catch (SocketTimeoutException e) {
@@ -298,23 +286,12 @@ public class ServerMain extends Thread {
 				e.printStackTrace();
 				System.exit(1);
 			}
-			
-		//	System.out.println(receivedMessage);
 		}
 	}
 	public static void main(String[] args) {
 		ServerMain m = new ServerMain();
+		//print out the current state of the patient database, also serves as a visual log that it's ready
 		System.out.println(m.d.getPatients().toString());
-		/*ArrayList<Medication> ed = m.d.queryMedicationByTime("13:57");
-		Gson gson = new GsonBuilder().create();
-		StringWriter s = new StringWriter();
-        gson.toJson(ed, s);
-        String a = s.toString();
-        System.out.println(a);
-        ArrayList<Medication> p = gson.fromJson(a, ArrayList.class);
-        ArrayList<Patient> j = m.d.getPatients();
-        System.out.println(Database.USER + Database.PASS); */
-      //  m.d.insertMedication(1, "test2", 3, "14:08:00");
         m.receive();
 	
 	}

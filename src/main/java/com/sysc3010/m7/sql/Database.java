@@ -5,10 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import server.Medication;
 import server.Patient;
+
+//@author Megan Ardron
 public class Database{
+	
 	
 	public static final String DATABASE = "jdbc:mysql://localhost:3306/dispenser";
 	public static final String USER = "root";
@@ -20,11 +22,12 @@ public class Database{
 		try {
 			con=DriverManager.getConnection(DATABASE, USER, PASS);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+	/*
+	 * Gets all patients from the database and returns them as an arraylist
+	 */
 	public ArrayList<Patient> getPatients() {
 		try {
 			ArrayList<Patient> pats = new ArrayList<Patient>();
@@ -40,42 +43,58 @@ public class Database{
 			return null;
 		}
 	}
-	
+	/*
+	 * Insert a patient into the database.
+	 */
 	public void insertPatient(Patient p) {
 		try {
 			Statement stmt = con.createStatement();
 			int i = stmt.executeUpdate("INSERT into patient (patient_name, room_number) VALUES ( '" + p.getName() + "' , " + p.getRoom() + ");");
 			System.out.println(i);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 	
+	/*
+	 * Insert scheduled medication into the database.
+	 */
 	public void insertMedication(Medication med) {
 		try {
 			Statement stmt = con.createStatement();
 			int i = stmt.executeUpdate("INSERT into medication (medication, dosage, patient_id, time) VALUES ( '" + med.getName() + "' , " + med.getDosage() + ", " + med.getPatient_id() + ", '" + med.getTime() + "');");
 			System.out.println(i);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 	
+	/*
+	 * 
+	 */
 	public static String toSQLDateTime(java.util.Date date) {
 		System.out.println(date.toString());
 		return (new java.sql.Date(date.getTime()).toString() + " " + date.getHours() + ":" + date.getMinutes());
 	}
 	
+	/*
+	 * Insert a record of a dosage applied into the database.
+	 * TODO actually use this.
+	 */
 	public void medicationApplied(String date, Medication m) {
 		try {
 			Statement stmt = con.createStatement();
 			int i = stmt.executeUpdate("INSERT into dosages (medication_id, date, patient_id) VALUES ( '" + m.getID() + "' , '" + date + "', " + m.getPatientID() + ");");
 			System.out.println(i);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 	
+	/*
+	 * Query patient by their name, with wildcards before and after.
+	 * Returns a patient object.
+	 */
 	public Patient queryPatientByName(String name) {
 		try {
 			Statement stmt = con.createStatement();
@@ -86,11 +105,14 @@ public class Database{
 				return null;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
 	
+	/*
+	 * Query patient by their unique id. No wildcarding. Returns a patient object.
+	 */
 	public Patient queryPatientById(String id) {
 		try {
 			Statement stmt = con.createStatement();
@@ -101,11 +123,15 @@ public class Database{
 				return null;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
 	
+	/*
+	 * Returns the medication identified by id as a medication object.
+	 * No wildcarding.
+	 */
 	public Medication queryMedicationById(String id) {
 		try {
 			Statement stmt = con.createStatement();
@@ -116,11 +142,14 @@ public class Database{
 				return null;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
 	
+	/*
+	 * Returns all medications for a given patient as an arraylist.
+	 */
 	public ArrayList<Medication> queryMedicationByPatient(Patient p) {
 		try {
 			ArrayList<Medication> meds = new ArrayList<Medication>();
@@ -129,7 +158,6 @@ public class Database{
 			while(rs.next())  {
 				Medication m = new Medication(rs);
 				meds.add(m);
-				System.out.println(rs.getInt("id")+"  "+rs.getString("medication")+"  "+rs.getInt("dosage") + "  "+rs.getInt("patient_id"));
 			}
 			return meds;
 		} catch (SQLException e) {
@@ -138,6 +166,9 @@ public class Database{
 		}
 	}
 	
+	/*
+	 * Used to set room in the patient database.
+	 */
 	public void setRoom(String patientID, String room) {
 		//test this for real with database
 		try {
@@ -149,6 +180,11 @@ public class Database{
 		}
 	}
 	
+	/*
+	 * Delete the specified patient from the database.
+	 * Also delete their medications so no further dispensions will happen.
+	 * If past is true then also delete all past dosage records.
+	 */
 	public void deletePatient(String id, boolean past) {
 		try {
 			Statement stmt = con.createStatement();
@@ -157,12 +193,14 @@ public class Database{
 			if (past) {
 				i = stmt.executeUpdate("DELETE from dosages where patient_id = '" + id + "' ;");
 			}
-			System.out.println(i);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 	
+	/*
+	 * Delete a medication record. If past is true then delete all past dosage records.
+	 */
 	public void deleteMedication(String id, boolean past) {
 		try {
 			Statement stmt = con.createStatement();
@@ -170,12 +208,14 @@ public class Database{
 			if (past) {
 				i = stmt.executeUpdate("DELETE from dosages where medication_id = '" + id + "' ;");
 			}
-			System.out.println(i);
 		} catch (Exception e) {
-			System.out.println(e);
-		}
+			e.printStackTrace();
+			}
 	}
 	
+	/*
+	 * Returns an arraylist of all medications that are to be dispensed in the next minute.
+	 */
 	public ArrayList<Medication> queryMedicationByTime(String time) {
 		try {
 			ArrayList<Medication> meds = new ArrayList<Medication>();
@@ -192,50 +232,4 @@ public class Database{
 			return null;
 		}
 	}
-	public void dispense() {
-		try {
-			
-			//this is temporary code, actual code will involve scheduling and communication
-			Statement stmt = con.createStatement();
-			java.util.Date d = new java.util.Date();
-			String s = d.getHours() + ":" + d.getMinutes();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM medication WHERE time LIKE '" + s + "%';");
-			while(rs.next())  
-				System.out.println(rs.getInt("id")+"  "+rs.getString("medication")+"  "+rs.getInt("dosage") + "  "+rs.getInt("patient_id"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		}
-	}
-	public static void main(String args[]) throws ClassNotFoundException {  
-		Database b = new Database();
-		System.out.println(b.queryPatientByName("nope"));
-	}
-	/*	try {  
-			Class.forName("com.mysql.jdbc.Driver");  
-			Connection con=DriverManager.getConnection(DATABASE, USER, PASS);
-			Patient p = queryPatientByName(con, "test");
-			System.out.println(p.toString());
-			ArrayList<Medication> m = queryMedicationByPatient(con, p);
-			System.out.println(m);
-			medicationApplied(con,new java.util.Date(),m.get(0));
-			//while (true) {
-				System.out.println("loop");
-				dispense(con);
-				//Thread.sleep(60000);
-			//}
-			//insertPatient(con, "Other", 3);
-			//Statement stmt=con.createStatement();  
-			//ResultSet rs=stmt.executeQuery("select * from patient");  
-			//while(rs.next())  
-				//System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
-			//insertMedication(con, 1,"ibuprofen", 200);
-			//rs=stmt.executeQuery("select * from medication");  
-			//while(rs.next())  
-			//	System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3)); 
-		}
-		catch(Exception e){
-			System.out.println(e);
-		}  
-	}  */
 }
